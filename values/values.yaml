@@ -1,0 +1,22 @@
+replicaCount: 1
+
+image:
+  repository: rabbitmq
+  tag: "3-management-alpine"
+  pullPolicy: IfNotPresent
+
+service:
+  amqpPort: 5672
+  managementPort: 15672
+  stompPort: 15674
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+pvc:
+  storage: 1Gi
