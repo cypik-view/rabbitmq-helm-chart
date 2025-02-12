@@ -20,14 +20,10 @@ spec:
             - containerPort: {{ .Values.service.managementPort }}
             - containerPort: {{ .Values.service.stompPort }}
           env:
-            - name: RABBITMQ_DEFAULT_VHOST
-              value: "{{ .Values.rabbitmq.defaultVHost }}"
-            - name: RABBITMQ_DEFAULT_USER
-              value: "{{ .Values.rabbitmq.defaultUser }}"
-            - name: RABBITMQ_DEFAULT_PASS
-              value: "{{ .Values.rabbitmq.defaultPass }}"
-            - name: RABBITMQ_LOAD_DEFINITIONS
-              value: "{{ .Values.rabbitmq.loadDefinitions }}"
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+            {{- end }}
           resources:
             requests:
               cpu: "{{ .Values.resources.requests.cpu }}"

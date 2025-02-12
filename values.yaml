@@ -6,7 +6,7 @@ image:
   pullPolicy: IfNotPresent
 
 service:
-  name: rabbitmq-service   # Define the service name here
+  name: rabbitmq-service
   amqpPort: 5672
   managementPort: 15672
   stompPort: 15674
@@ -30,7 +30,7 @@ persistence:
     requests:
       storage: 1Gi
 
-rabbitmq:
+env:
   defaultVHost: "/"
   defaultUser: "guest"
   defaultPass: "guest"
