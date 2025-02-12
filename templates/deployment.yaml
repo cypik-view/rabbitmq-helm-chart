@@ -21,13 +21,13 @@ spec:
             - containerPort: {{ .Values.service.stompPort }}
           env:
             - name: RABBITMQ_DEFAULT_VHOST
-              value: "/"
+              value: "{{ .Values.rabbitmq.defaultVHost }}"
             - name: RABBITMQ_DEFAULT_USER
-              value: "guest"
+              value: "{{ .Values.rabbitmq.defaultUser }}"
             - name: RABBITMQ_DEFAULT_PASS
-              value: "guest"
+              value: "{{ .Values.rabbitmq.defaultPass }}"
             - name: RABBITMQ_LOAD_DEFINITIONS
-              value: "/etc/rabbitmq/definitions.json"
+              value: "{{ .Values.rabbitmq.loadDefinitions }}"
           resources:
             requests:
               cpu: "{{ .Values.resources.requests.cpu }}"
@@ -43,12 +43,11 @@ spec:
             timeoutSeconds: 10
             failureThreshold: 5
           volumeMounts:
-            - name: shared-storage
-              mountPath: /var/lib/rabbitmq
-              subPath: .data
-            - name: shared-storage
-              mountPath: /var/log/rabbitmq
-              subPath: .logs
+            {{- range .Values.volumeMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              subPath: {{ .subPath }}
+            {{- end }}
             - name: config
               mountPath: /etc/rabbitmq/rabbitmq.conf
               subPath: rabbitmq.conf
@@ -62,22 +61,22 @@ spec:
       volumes:
         - name: shared-storage
           persistentVolumeClaim:
-            claimName: rabbitmq-pvc-claim
+            claimName: {{ .Values.persistence.claimName | default "rabbitmq-pvc-claim" }}
         - name: config
           configMap:
-            name: rabbitmq-config
+            name: {{ .Release.Name }}-config
             items:
-              - key: rabbitmq.conf
-                path: rabbitmq.conf
+            - key: rabbitmq.conf
+              path: rabbitmq.conf
         - name: plugins
           configMap:
-            name: plugins-config
+            name: {{ .Release.Name }}-plugins-config
             items:
-              - key: enabled-plugins
-                path: enabled_plugins
+            - key: enabled-plugins
+              path: enabled_plugins
         - name: definitions
           configMap:
-            name: definitions-config
+            name: {{ .Release.Name }}-definitions-config
             items:
-              - key: definitions.json
-                path: definitions.json
+            - key: definitions.json
+              path: definitions.json

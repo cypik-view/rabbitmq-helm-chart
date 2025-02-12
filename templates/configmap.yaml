@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rabbitmq-config
+  name: {{ .Release.Name }}-config
 data:
   rabbitmq.conf: |
     loopback_users = none
@@ -20,7 +20,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: plugins-config
+  name: {{ .Release.Name }}-plugins-config
 data:
   enabled-plugins: |
     [rabbitmq_management,rabbitmq_mqtt,rabbitmq_web_mqtt,rabbitmq_prometheus].
@@ -29,7 +29,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: definitions-config
+  name: {{ .Release.Name }}-definitions-config
 data:
   definitions.json: |
     {
