@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rabbitmq
+  name: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: rabbitmq
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: rabbitmq
+        app: {{ .Chart.Name }}
     spec:
       containers:
-        - name: rabbitmq
+        - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: {{ .Values.service.amqpPort }}
@@ -60,19 +60,19 @@ spec:
             claimName: {{ .Values.persistence.claimName | default "rabbitmq-pvc-claim" }}
         - name: config
           configMap:
-            name: {{ .Release.Name }}-config
+            name: {{ .Chart.Name }}-config
             items:
             - key: rabbitmq.conf
               path: rabbitmq.conf
         - name: plugins
           configMap:
-            name: {{ .Release.Name }}-plugins-config
+            name: {{ .Chart.Name }}-plugins-config
             items:
             - key: enabled-plugins
               path: enabled_plugins
         - name: definitions
           configMap:
-            name: {{ .Release.Name }}-definitions-config
+            name: {{ .Chart.Name }}-definitions-config
             items:
             - key: definitions.json
               path: definitions.json
